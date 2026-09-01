@@ -1,0 +1,16 @@
+TECHNICAL SUPPORT POLICY
+
+For failed payments, support should first verify whether
+the payment provider accepted or rejected the transaction.
+
+Customers should not be charged twice for the same order.
+
+If money was deducted but the order remains unpaid,
+support should verify the transaction status before asking
+the customer to retry payment.
+
+If the payment status cannot be confirmed, create a support
+ticket and escalate the issue.
+
+Never ask customers to provide passwords or full payment
+card numbers.

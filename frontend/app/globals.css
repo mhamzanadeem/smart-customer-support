@@ -1,0 +1,111 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+  background: #f5f7fb;
+  color: #111827;
+}
+
+.container {
+  width: min(1000px, 94%);
+  margin: 40px auto;
+}
+
+header {
+  margin-bottom: 24px;
+}
+
+header h1 {
+  margin-bottom: 8px;
+}
+
+.chat {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.status {
+  background: #f1f5f9;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.messages {
+  min-height: 400px;
+}
+
+.message {
+  display: flex;
+  margin-bottom: 14px;
+}
+
+.message.user {
+  justify-content: flex-end;
+}
+
+.bubble {
+  max-width: 80%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #eef2ff;
+}
+
+.message.user .bubble {
+  background: #111827;
+  color: white;
+}
+
+.bubble p {
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.bubble small {
+  opacity: 0.7;
+}
+
+.sources {
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+.input-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.input-row input {
+  flex: 1;
+  padding: 14px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+.input-row button {
+  padding: 14px 22px;
+  border: none;
+  border-radius: 10px;
+  background: #111827;
+  color: white;
+  cursor: pointer;
+}
+
+.input-row button:disabled {
+  opacity: 0.5;
+}
+
+.error {
+  color: #b91c1c;
+  margin-top: 10px;
+}
