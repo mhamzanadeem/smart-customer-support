@@ -21,7 +21,7 @@ export default function Status() {
         return;
       }
 
-      fetch(`${API_URL}/health`)
+      fetch(`${API_URL}/api/keepalive`)
         .then((response) => {
           if (!response.ok) throw new Error();
           return response.json();
