@@ -25,6 +25,8 @@ class ChatResponse(BaseModel):
 
     thread_id: str
 
+    request_id: str = ""
+
 
 class HealthResponse(BaseModel):
     status: str
@@ -32,6 +34,12 @@ class HealthResponse(BaseModel):
     database: bool
 
     version: str = "1.0.0"
+
+
+class ErrorResponse(BaseModel):
+    error: str
+    message: str
+    request_id: str = ""
 
 
 class Ticket(BaseModel):

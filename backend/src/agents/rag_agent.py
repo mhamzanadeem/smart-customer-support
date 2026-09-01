@@ -1,3 +1,5 @@
+import time
+
 from agents import Agent, Runner
 
 from src.rag.retriever import RAGRetriever
@@ -29,12 +31,24 @@ async def run_rag_agent(
     query: str,
 ) -> tuple[str, list[str]]:
 
-    context = await retriever.retrieve(
-        query
-    )
+    rid = query[:20] if query else "???"
+
+    try:
+        _log(rid, "Retrieving context from RAG store")
+        t0 = time.perf_counter()
+        context = await retriever.retrieve(query)
+        elapsed = time.perf_counter() - t0
+        _log(rid, f"RAG retrieval done: {len(context)} docs ({elapsed:.2f}s)")
+    except Exception as exc:
+        _log(rid, f"RAG retrieval failed: {exc}")
+        return (
+            "I apologize, but I encountered an error "
+            "while searching our knowledge base.",
+            [],
+        )
 
     if not context:
-
+        _log(rid, "No context found, returning fallback")
         return (
             "I could not find enough information "
             "in the company knowledge base to answer "
@@ -65,10 +79,22 @@ Company knowledge base:
 Answer the customer using the knowledge base.
 """
 
-    result = await Runner.run(
-        rag_agent,
-        prompt,
-    )
+    try:
+        _log(rid, "Running RAG agent LLM call")
+        t0 = time.perf_counter()
+        result = await Runner.run(
+            rag_agent,
+            prompt,
+        )
+        elapsed = time.perf_counter() - t0
+        _log(rid, f"RAG LLM done ({elapsed:.2f}s)")
+    except Exception as exc:
+        _log(rid, f"RAG LLM failed: {exc}")
+        return (
+            "I apologize, but I encountered an error "
+            "while generating the response.",
+            [],
+        )
 
     sources = [
         item["source"]
@@ -76,3 +102,7 @@ Answer the customer using the knowledge base.
     ]
 
     return result.final_output, sources
+
+
+def _log(rid: str, msg: str):
+    print(f"[RAG][{rid}] {msg}")

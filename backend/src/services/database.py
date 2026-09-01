@@ -1,6 +1,8 @@
+import time
 from functools import lru_cache
 
 from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
 
 from src.config import get_settings
 
@@ -11,7 +13,9 @@ def get_client() -> MongoClient:
 
     return MongoClient(
         settings.mongodb_uri,
-        serverSelectionTimeoutMS=10000,
+        serverSelectionTimeoutMS=settings.mongo_timeout * 1000,
+        connectTimeoutMS=settings.mongo_timeout * 1000,
+        socketTimeoutMS=settings.mongo_timeout * 1000,
     )
 
 
@@ -30,3 +34,25 @@ def ping_database() -> bool:
         return True
     except Exception:
         return False
+
+
+def check_mongodb_health() -> dict:
+    try:
+        t0 = time.perf_counter()
+        client = get_client()
+        client.admin.command("ping")
+        elapsed = time.perf_counter() - t0
+        return {
+            "status": "connected",
+            "latency_ms": round(elapsed * 1000, 1),
+        }
+    except ConnectionFailure as exc:
+        return {
+            "status": "connection_failed",
+            "error": str(exc),
+        }
+    except Exception as exc:
+        return {
+            "status": "error",
+            "error": str(exc),
+        }

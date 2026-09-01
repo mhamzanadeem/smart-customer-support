@@ -13,7 +13,8 @@ class EmbeddingService:
             )
 
         self.client = AsyncOpenAI(
-            api_key=settings.openai_api_key
+            api_key=settings.openai_api_key,
+            timeout=settings.llm_timeout,
         )
 
         self.model = settings.embedding_model

@@ -1,11 +1,22 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from datetime import datetime, timezone
 
 from src.config import get_settings
 from src.api.routes import router
+from src.services.logging_config import setup_logging
+from dotenv import load_dotenv
+import os
+from pathlib import Path
 
+# Load .env from the project root
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+load_dotenv(PROJECT_ROOT / ".env")
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 settings = get_settings()
+
+setup_logging()
 
 
 app = FastAPI(
@@ -33,4 +44,14 @@ async def root():
         "name": "Smart Customer Support",
         "version": "1.0.0",
         "status": "running",
+    }
+
+
+@app.get("/health")
+async def health():
+    from src.services.database import ping_database
+    return {
+        "status": "ok",
+        "service": "smart-customer-support",
+        "database": ping_database(),
     }

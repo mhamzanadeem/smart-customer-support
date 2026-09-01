@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: smart-customer-support-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn src.api.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.10"
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DATABASE
+        value: smart_customer_support
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      - key: LLM_PROVIDER
+        value: openai
+      - key: EMBEDDING_MODEL
+        value: text-embedding-3-small
+      - key: EMBEDDING_DIMENSION
+        value: "1536"
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: DEBUG
+        value: "false"
+      - key: LLM_TIMEOUT
+        value: "30"
+      - key: MONGO_TIMEOUT
+        value: "10"
+      - key: REQUEST_TIMEOUT
+        value: "60"
+      - key: RAG_TOP_K
+        value: "5"
+      - key: RAG_SIMILARITY_THRESHOLD
+        value: "0.70"

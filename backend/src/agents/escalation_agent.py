@@ -1,3 +1,5 @@
+import time
+
 from agents import Agent, Runner
 
 
@@ -24,9 +26,22 @@ async def create_escalation(
     query: str,
 ) -> str:
 
-    result = await Runner.run(
-        escalation_agent,
-        query,
-    )
+    _log(f"Creating escalation for: {query[:50]}...")
+    t0 = time.perf_counter()
 
-    return result.final_output
+    try:
+        result = await Runner.run(
+            escalation_agent,
+            query,
+        )
+        elapsed = time.perf_counter() - t0
+        _log(f"Escalation done ({elapsed:.2f}s)")
+        return result.final_output
+    except Exception as exc:
+        elapsed = time.perf_counter() - t0
+        _log(f"Escalation FAILED ({elapsed:.2f}s): {exc}")
+        raise
+
+
+def _log(msg: str):
+    print(f"[ESCALATION] {msg}")

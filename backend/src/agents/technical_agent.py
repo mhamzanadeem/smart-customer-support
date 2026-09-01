@@ -1,3 +1,5 @@
+import time
+
 from agents import Agent, Runner
 
 
@@ -26,9 +28,22 @@ async def run_technical_agent(
     query: str,
 ) -> str:
 
-    result = await Runner.run(
-        technical_agent,
-        query,
-    )
+    _log(f"Running technical agent for: {query[:50]}...")
+    t0 = time.perf_counter()
 
-    return result.final_output
+    try:
+        result = await Runner.run(
+            technical_agent,
+            query,
+        )
+        elapsed = time.perf_counter() - t0
+        _log(f"Technical agent done ({elapsed:.2f}s)")
+        return result.final_output
+    except Exception as exc:
+        elapsed = time.perf_counter() - t0
+        _log(f"Technical agent FAILED ({elapsed:.2f}s): {exc}")
+        raise
+
+
+def _log(msg: str):
+    print(f"[TECHNICAL] {msg}")

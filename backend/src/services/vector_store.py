@@ -1,3 +1,4 @@
+import time
 from datetime import datetime, timezone
 
 from src.config import get_settings
@@ -47,9 +48,11 @@ class MongoVectorStore:
         limit: int | None = None,
     ) -> list[dict]:
 
-        embedding = await self.embeddings.embed(
-            query
-        )
+        _log(f"Starting embedding for vector search")
+        t0 = time.perf_counter()
+        embedding = await self.embeddings.embed(query)
+        elapsed = time.perf_counter() - t0
+        _log(f"Embedding done ({elapsed:.2f}s)")
 
         limit = limit or self.settings.rag_top_k
 
@@ -79,15 +82,33 @@ class MongoVectorStore:
             },
         ]
 
-        results = list(
-            self.collection.aggregate(
-                pipeline
-            )
-        )
+        _log(f"Starting MongoDB vector search (limit={limit})")
+        t1 = time.perf_counter()
 
-        return [
+        try:
+            results = list(
+                self.collection.aggregate(
+                    pipeline
+                )
+            )
+            elapsed = time.perf_counter() - t1
+            _log(f"MongoDB search done: {len(results)} raw results ({elapsed:.2f}s)")
+        except Exception as exc:
+            elapsed = time.perf_counter() - t1
+            _log(f"MongoDB search FAILED ({elapsed:.2f}s): {exc}")
+            raise
+
+        filtered = [
             result
             for result in results
             if result.get("score", 0)
             >= self.settings.rag_similarity_threshold
         ]
+
+        _log(f"After threshold filter: {len(filtered)} docs (threshold={self.settings.rag_similarity_threshold})")
+
+        return filtered
+
+
+def _log(msg: str):
+    print(f"[VECTOR_STORE] {msg}")

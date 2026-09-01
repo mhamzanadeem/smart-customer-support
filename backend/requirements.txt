@@ -1,24 +1,24 @@
-fastapi>=0.115,<1
-uvicorn[standard]>=0.30,<1
+fastapi
+uvicorn[standard]
 
-pydantic>=2.8,<3
-pydantic-settings>=2.5,<3
-python-dotenv>=1.0,<2
+pydantic
+pydantic-settings
+python-dotenv
 
-pymongo>=4.10,<5
+pymongo
 
-openai>=1.50,<2
-openai-agents>=0.6,<1
+openai
+openai-agents
 
-langgraph>=1.0,<2
-langchain-core>=1.0,<2
+langgraph
+langchain-core
 
-mcp[cli]>=2,<3
+mcp[cli]
 
-pypdf>=5,<7
+pypdf
 
-tenacity>=9,<10
+tenacity
 
-pytest>=8,<9
-pytest-asyncio>=1,<2
-httpx>=0.27,<1
+pytest
+pytest-asyncio
+httpx

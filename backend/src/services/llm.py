@@ -8,13 +8,15 @@ class LLMService:
         self.settings = get_settings()
 
         provider = self.settings.llm_provider.lower()
+        timeout = self.settings.llm_timeout
 
         if provider == "openai":
             if not self.settings.openai_api_key:
                 raise ValueError("OPENAI_API_KEY is required.")
 
             self.client = AsyncOpenAI(
-                api_key=self.settings.openai_api_key
+                api_key=self.settings.openai_api_key,
+                timeout=timeout,
             )
 
             self.model = self.settings.openai_model
@@ -26,6 +28,7 @@ class LLMService:
             self.client = AsyncOpenAI(
                 api_key=self.settings.groq_api_key,
                 base_url="https://api.groq.com/openai/v1",
+                timeout=timeout,
             )
 
             self.model = self.settings.groq_model
