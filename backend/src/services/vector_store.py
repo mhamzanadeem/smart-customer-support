@@ -59,7 +59,7 @@ class MongoVectorStore:
         pipeline = [
             {
                 "$vectorSearch": {
-                    "index": "knowledge_vector_index",
+                    "index": "vector_index",
                     "path": "embedding",
                     "queryVector": embedding,
                     "numCandidates": max(

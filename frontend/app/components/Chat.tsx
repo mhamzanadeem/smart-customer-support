@@ -13,6 +13,33 @@ type MessageType = {
   sources?: string[];
 };
 
+const SUGGESTIONS = [
+  {
+    label: "FAQ",
+    query: "What is your refund policy?",
+  },
+  {
+    label: "FAQ",
+    query: "How do I track my order?",
+  },
+  {
+    label: "FAQ",
+    query: "What are your shipping options?",
+  },
+  {
+    label: "Technical",
+    query: "My payment failed and I cannot complete my order.",
+  },
+  {
+    label: "Technical",
+    query: "The app crashes when I try to upload a PDF.",
+  },
+  {
+    label: "Escalation",
+    query: "I have been waiting 3 weeks for my refund and I want to speak to a manager.",
+  },
+];
+
 export default function Chat() {
   const [query, setQuery] = useState("");
 
@@ -25,12 +52,11 @@ export default function Chat() {
   const [error, setError] =
     useState("");
 
-  async function sendMessage() {
-    if (!query.trim()) {
+  async function sendMessage(text?: string) {
+    const userMessage = text || query.trim();
+    if (!userMessage) {
       return;
     }
-
-    const userMessage = query;
 
     setQuery("");
 
@@ -92,6 +118,9 @@ export default function Chat() {
     }
   }
 
+  const showSuggestions =
+    messages.length === 0 && !loading;
+
   return (
     <section className="chat">
       <Status />
@@ -106,6 +135,35 @@ export default function Chat() {
           )
         )}
       </div>
+
+      {showSuggestions && (
+        <div className="suggestions">
+          <p className="suggestions-label">
+            Try a question:
+          </p>
+          <div className="suggestions-grid">
+            {SUGGESTIONS.map(
+              (suggestion, index) => (
+                <button
+                  key={index}
+                  className="suggestion-btn"
+                  onClick={() =>
+                    sendMessage(
+                      suggestion.query
+                    )
+                  }
+                  disabled={loading}
+                >
+                  <span className="suggestion-tag">
+                    {suggestion.label}
+                  </span>
+                  {suggestion.query}
+                </button>
+              )
+            )}
+          </div>
+        </div>
+      )}
 
       {error && (
         <div className="error">
@@ -130,7 +188,7 @@ export default function Chat() {
         />
 
         <button
-          onClick={sendMessage}
+          onClick={() => sendMessage()}
           disabled={loading}
         >
           {loading
