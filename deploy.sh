@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+
+python -m pip install \
+    -r requirements.txt
+
+
+uvicorn \
+    src.api.main:app \
+    --host 0.0.0.0 \
+    --port "${PORT:-8000}"
